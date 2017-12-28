@@ -51,22 +51,37 @@ app.get('/api/todos/search', function search(req, res) {
 });
 
 app.get('/api/todos', function index(req, res) {
-  /* This endpoint responds with all of the todos
+  /* This endpoint responds with all of the todos FINISHED
    */
    res.json({todos: todos});
 });
 
 app.post('/api/todos', function create(req, res) {
   /* This endpoint will add a todo to our "database"
-   * and respond with the newly created todo.
+   * and respond with the newly created todo. FINISHED
    */
+  // Post
+  var newItem = req.body; //Setting up a variable for a newItem on todos list
+  if (todos.length > 0) { //a conditional statement checking to see if the list contains items and assigning id
+    newItem._id = todos[todos.length - 1]._id + 1; 
+    } else { 
+      newItem._id = 1; 
+    }
+
+
+  // newItem = todos.length + 1; first attempts at logic
+  todos.push(newItem); 
+  res.json(newItem);
+  // res.send(req.body);
+
 });
 
 app.get('/api/todos/:id', function show(req, res) {
   /* This endpoint will return a single todo with the
    * id specified in the route parameter (:id)
    */
-   
+   res.send(todos[req.params.id -1]);
+   // res.json({todos: todos[req.params._id -1]}); first try and build out idea.
 });
 
 app.put('/api/todos/:id', function update(req, res) {
@@ -74,6 +89,7 @@ app.put('/api/todos/:id', function update(req, res) {
    * id specified in the route parameter (:id) and respond
    * with the newly updated todo.
    */
+   res.send(todos[req.params.id -1] = (req.body));
 });
 
 app.delete('/api/todos/:id', function destroy(req, res) {
@@ -81,6 +97,9 @@ app.delete('/api/todos/:id', function destroy(req, res) {
    * id specified in the route parameter (:id) and respond
    * with deleted todo.
    */
+  todos[req.params.id -1] = null;
+  // res.send('You DELETEd the todo with the ID of ');
+  res.json(todos);
 });
 
 /**********
