@@ -61,17 +61,17 @@ app.post('/api/todos', function create(req, res) {
    * and respond with the newly created todo. FINISHED
    */
   // Post
-  var newItem = req.body; //Setting up a variable for a newItem on todos list
+  var newTodos = req.body; //Setting up a variable for a newItem on todos list
   if (todos.length > 0) { //a conditional statement checking to see if the list contains items and assigning id
-    newItem._id = todos[todos.length - 1]._id + 1; 
+    newTodos._id = todos[todos.length - 1]._id + 1; 
     } else { 
-      newItem._id = 1; 
+      newTodos._id = 1; 
     }
 
 
-  // newItem = todos.length + 1; first attempts at logic
-  todos.push(newItem); 
-  res.json(newItem);
+  // newTodos = todos.length + 1; first attempts at logic
+  todos.push(newTodos); 
+  res.json(newTodos);
   // res.send(req.body);
 
 });
@@ -89,15 +89,32 @@ app.put('/api/todos/:id', function update(req, res) {
    * id specified in the route parameter (:id) and respond
    * with the newly updated todo.
    */
-   res.send(todos[req.params.id -1] = (req.body));
+   // res.send(todos[req.params.id -1] = (req.body));
+   var todoId = Number(req.params.id);
+
+ if(!req.body.task || !req.body.description){
+   res.send("task");
+ } else {
+   req.body._id = todoId;
+
+   var theTodo = todos.find(function(todos){
+     return todos._id === Number(req.params.id);
+   });
+
+   theTodo.task = req.body.task; //
+   theTodo.description = req.body.description;
+   res.json(theTodo);
+ }
+
+// });
 });
 
 app.delete('/api/todos/:id', function destroy(req, res) {
   /* This endpoint will delete a single todo with the
    * id specified in the route parameter (:id) and respond
    * with deleted todo.
-   */ //  I NEED TO USE SPLICE, UST HAVEN'T FINISHED YET!
-  todos[req.params.id -1] = null;
+   */ //  I NEED TO USE SPLICE, USE HAVEN'T FINISHED YET!
+  todos.splice([req.params.id -1], 1);
   // res.send('You DELETEd the todo with the ID of ');
   res.json(todos);
 });
